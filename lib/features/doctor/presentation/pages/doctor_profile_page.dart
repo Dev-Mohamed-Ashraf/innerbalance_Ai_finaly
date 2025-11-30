@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:innerbalance/core/services/service_locator.dart';
 import 'package:innerbalance/core/theme/app_palette.dart';
 import 'package:innerbalance/features/auth/presentation/pages/login_screen.dart';
+import 'package:innerbalance/features/ai/presentation/pages/ai_health_assessment_page.dart';
 import 'package:innerbalance/features/doctor/data/models/doctor_profile_model.dart';
 import 'package:innerbalance/features/doctor/data/repositories/doctor_repository_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -167,6 +168,22 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                 const SizedBox(height: 24),
                 const Divider(),
                 const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AIHealthAssessmentPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.psychology),
+                  label: const Text('تحليل صحة المريض بالذكاء الاصطناعي'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 OutlinedButton(
                   onPressed: () async {
                     await Supabase.instance.client.auth.signOut();

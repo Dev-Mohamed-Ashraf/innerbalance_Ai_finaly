@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:innerbalance/features/auth/presentation/pages/login_screen.dart';
+import 'package:innerbalance/features/ai/presentation/pages/ai_health_assessment_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PatientProfilePage extends StatelessWidget {
@@ -13,6 +14,19 @@ class PatientProfilePage extends StatelessWidget {
         children: [
           const Text('Patient Profile Settings (Coming Soon)'),
           const SizedBox(height: 20),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const AIHealthAssessmentPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.psychology),
+            label: const Text('التحليل الصحي بالذكاء الاصطناعي'),
+          ),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () async {
               await Supabase.instance.client.auth.signOut();
