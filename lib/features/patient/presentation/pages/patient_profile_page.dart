@@ -12,7 +12,7 @@ class PatientProfilePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Patient Profile Settings (Coming Soon)'),
+          const Text('Patient Profile Settings'),
           const SizedBox(height: 20),
           ElevatedButton.icon(
             onPressed: () {
@@ -24,7 +24,7 @@ class PatientProfilePage extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.psychology),
-            label: const Text('التحليل الصحي بالذكاء الاصطناعي'),
+            label: const Text('AI Addiction Analysis'),
           ),
           const SizedBox(height: 10),
           ElevatedButton(

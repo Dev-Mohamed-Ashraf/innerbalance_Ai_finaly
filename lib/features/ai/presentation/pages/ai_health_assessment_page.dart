@@ -1,9 +1,9 @@
 import 'dart:io';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:innerbalance/core/services/ai_engine_service.dart';
+import 'package:innerbalance/core/services/service_locator.dart';
 
 class AIHealthAssessmentPage extends StatefulWidget {
   const AIHealthAssessmentPage({super.key});
@@ -14,6 +14,7 @@ class AIHealthAssessmentPage extends StatefulWidget {
 
 class _AIHealthAssessmentPageState extends State<AIHealthAssessmentPage> {
   File? _selectedImage;
+  String? _analyzedImagePath;
   bool _isAnalyzing = false;
   Map<String, dynamic>? _analysisResult;
   final ImagePicker _picker = ImagePicker();
@@ -30,13 +31,14 @@ class _AIHealthAssessmentPageState extends State<AIHealthAssessmentPage> {
       if (image != null) {
         setState(() {
           _selectedImage = File(image.path);
+          _analyzedImagePath = null;
           _analysisResult = null;
         });
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error picking image: $e')),
+          SnackBar(content: Text('خطأ في اختيار الصورة: $e')),
         );
       }
     }
@@ -50,180 +52,31 @@ class _AIHealthAssessmentPageState extends State<AIHealthAssessmentPage> {
     });
 
     try {
-      final apiKey = dotenv.env['GEMINI_API_KEY'];
-      if (apiKey == null || apiKey.isEmpty) {
-        throw Exception('Gemini API key not found');
-      }
+      final res = await sl<AiEngineService>().analyzeImage(_selectedImage!.path);
 
-      final imageBytes = await _selectedImage!.readAsBytes();
-      
-      final prompt = '''
-أنت طبيب متخصص في تحليل الصور الطبية. قم بتحليل هذه الصورة بعناية وابحث عن العلامات التالية:
-
-1. **الهالات السوداء تحت العين**: قيّم شدتها من 0-100%
-2. **احمرار العينين**: قيّم شدته من 0-100%
-3. **شحوب الوجه**: قيّم شدته من 0-100%
-4. **علامات الإرهاق**: قيّم شدتها من 0-100%
-5. **علامات الجفاف**: قيّم شدتها من 0-100%
-
-قدم النتيجة بالتنسيق التالي بالضبط:
-
-**التحليل العام:**
-[وصف عام للحالة الصحية الظاهرة]
-
-**النتائج التفصيلية:**
-- الهالات السوداء: [نسبة]% - [وصف]
-- احمرار العينين: [نسبة]% - [وصف]
-- شحوب الوجه: [نسبة]% - [وصف]
-- علامات الإرهاق: [نسبة]% - [وصف]
-- علامات الجفاف: [نسبة]% - [وصف]
-
-**نسبة الخطر الإجمالية:** [نسبة]%
-
-**الأسباب المحتملة:**
-- [سبب 1]
-- [سبب 2]
-- [سبب 3]
-
-**التوصيات:**
-- [توصية 1]
-- [توصية 2]
-- [توصية 3]
-
-**تنبيه طبي:**
-هذا التحليل هو مساعد فقط وليس بديلاً عن الفحص الطبي المباشر. يُنصح بمراجعة طبيب مختص للحصول على تشخيص دقيق.
-''';
-
-      // List of models to try in order of preference (Quality -> Speed -> Legacy)
-      final models = [
-        'gemini-1.5-pro',
-        'gemini-1.5-flash',
-        'gemini-pro', // Fallback to 1.0 Pro if 1.5 is unavailable
-      ];
-
-      String? successModel;
-      GenerateContentResponse? response;
-      Map<String, String> modelErrors = {};
-
-      for (final modelName in models) {
-        try {
-          final model = GenerativeModel(
-            model: modelName,
-            apiKey: apiKey,
-            safetySettings: [
-              SafetySetting(HarmCategory.harassment, HarmBlockThreshold.none),
-              SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.none),
-              SafetySetting(HarmCategory.sexuallyExplicit, HarmBlockThreshold.none),
-              SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.none),
-            ],
-          );
-
-          final content = [
-            Content.multi([
-              TextPart(prompt),
-              DataPart('image/jpeg', imageBytes),
-            ])
-          ];
-
-          response = await model.generateContent(content);
-          successModel = modelName;
-          break; // Found a working model!
-        } catch (e) {
-          modelErrors[modelName] = e.toString();
-          continue;
-        }
-      }
-
-      if (successModel != null && response != null && response.text != null) {
+      if (mounted) {
         setState(() {
-          _analysisResult = _parseAnalysisResult(response!.text!);
           _isAnalyzing = false;
+          if (res.containsKey('error')) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('خطأ: ${res['error']}')),
+            );
+          } else {
+            _analyzedImagePath = res['analyzed_image_path'];
+            _analysisResult = res['result'];
+          }
         });
-
-        // Delete image after analysis for privacy
-        await _selectedImage!.delete();
-        setState(() {
-          _selectedImage = null;
-        });
-      } else {        // All models failed, switch to simulation mode
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تعذر الاتصال بالخادم. جاري التبديل إلى وضع المحاكاة الذكي...'),
-              backgroundColor: Colors.orange,
-              duration: Duration(seconds: 2),
-            ),
-          );
-        }
-        await _simulateAnalysis();
       }
     } catch (e) {
-      // Even if the outer try-catch catches something, try simulation as a last resort
-      await _simulateAnalysis();
+      if (mounted) {
+        setState(() {
+          _isAnalyzing = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('حدث خطأ غير متوقع: $e')),
+        );
+      }
     }
-  }
-
-  Future<void> _simulateAnalysis() async {
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (!mounted) return;
-
-    // Generate random realistic values
-    final random = DateTime.now().millisecondsSinceEpoch;
-    final fatigue = 20 + (random % 30); // 20-50%
-    final darkCircles = 15 + (random % 25); // 15-40%
-    final dehydration = 10 + (random % 20); // 10-30%
-    final redness = 5 + (random % 15); // 5-20%
-    final pallor = 10 + (random % 20); // 10-30%
-    
-    final totalRisk = (fatigue + darkCircles + dehydration) ~/ 3;
-
-    final simulatedText = '''
-**التحليل العام:**
-بناءً على تحليل ملامح الوجه، تظهر بعض علامات الإجهاد العامة التي قد تكون ناتجة عن نمط الحياة اليومي. البشرة تبدو بحاجة إلى بعض العناية والترطيب.
-
-**النتائج التفصيلية:**
-- الهالات السوداء: $darkCircles% - وجود تصبغات خفيفة تحت العين.
-- احمرار العينين: $redness% - العين تبدو طبيعية مع احمرار طفيف.
-- شحوب الوجه: $pallor% - لون البشرة يميل قليلاً للشحوب.
-- علامات الإرهاق: $fatigue% - تظهر علامات تعب متوسطة حول العينين.
-- علامات الجفاف: $dehydration% - البشرة تحتاج لترطيب إضافي.
-
-**نسبة الخطر الإجمالية:** $totalRisk%
-
-**الأسباب المحتملة:**
-- قلة النوم أو عدم انتظام ساعات النوم.
-- عدم شرب كميات كافية من الماء.
-- التعرض المستمر للشاشات والإجهاد البصري.
-
-**التوصيات:**
-- محاولة النوم لمدة 7-8 ساعات يومياً.
-- زيادة شرب الماء (8 أكواب يومياً).
-- استخدام مرطب مناسب للبشرة وتقليل السهر.
-
-**تنبيه طبي:**
-هذا التحليل هو محاكاة تقديرية بناءً على الصورة، ولا يغني عن الفحص الطبي المتخصص.
-''';
-
-    setState(() {
-      _analysisResult = _parseAnalysisResult(simulatedText);
-      _isAnalyzing = false;
-    });
-
-    if (_selectedImage != null && await _selectedImage!.exists()) {
-      await _selectedImage!.delete();
-    }
-    setState(() {
-      _selectedImage = null;
-    });
-  }
-
-  Map<String, dynamic> _parseAnalysisResult(String text) {
-    return {
-      'fullText': text,
-      'timestamp': DateTime.now(),
-    };
   }
 
   @override
@@ -239,185 +92,23 @@ class _AIHealthAssessmentPageState extends State<AIHealthAssessmentPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Privacy Notice
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue.shade200),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.privacy_tip, color: Colors.blue.shade700),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'خصوصيتك مهمة: الصور لا يتم حفظها وتُحذف تلقائياً بعد التحليل',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            _buildInfoCard(
+              Icons.privacy_tip,
+              'خصوصيتك مهمة: الصور لا يتم حفظها وتُحذف تلقائياً بعد التحليل',
+              Colors.blue,
             ),
             const SizedBox(height: 24),
 
-            // Image Selection Buttons
-            if (_selectedImage == null && _analysisResult == null) ...[
-              const Text(
-                'اختر طريقة التقاط الصورة:',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _pickImage(ImageSource.camera),
-                      icon: const Icon(Icons.camera_alt),
-                      label: const Text('التقاط صورة'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _pickImage(ImageSource.gallery),
-                      icon: const Icon(Icons.photo_library),
-                      label: const Text('اختيار من المعرض'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-
-            // Selected Image Preview
-            if (_selectedImage != null) ...[
-              const Text(
-                'الصورة المختارة:',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  _selectedImage!,
-                  height: 300,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          _selectedImage = null;
-                        });
-                      },
-                      icon: const Icon(Icons.delete),
-                      label: const Text('حذف'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    flex: 2,
-                    child: ElevatedButton.icon(
-                      onPressed: _isAnalyzing ? null : _analyzeImage,
-                      icon: _isAnalyzing
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Icon(Icons.analytics),
-                      label: Text(_isAnalyzing ? 'جاري التحليل...' : 'تحليل الصورة'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            // Image Selection or Preview
+            if (_selectedImage == null && _analysisResult == null)
+              _buildImagePickerUI()
+            else if (_selectedImage != null || _analyzedImagePath != null)
+              _buildImagePreviewUI(),
 
             // Analysis Results
             if (_analysisResult != null) ...[
               const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.green.shade200),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.check_circle, color: Colors.green.shade700),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'تم التحليل بنجاح',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: SelectableText(
-                        _analysisResult!['fullText'],
-                        style: const TextStyle(
-                          fontSize: 14,
-                          height: 1.6,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'وقت التحليل: ${_formatDateTime(_analysisResult!['timestamp'])}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _analysisResult = null;
-                  });
-                },
-                icon: const Icon(Icons.refresh),
-                label: const Text('تحليل صورة جديدة'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
+              _buildResultUI(),
             ],
           ],
         ),
@@ -425,7 +116,189 @@ class _AIHealthAssessmentPageState extends State<AIHealthAssessmentPage> {
     );
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}/${dateTime.month}/${dateTime.year} - ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+  Widget _buildInfoCard(IconData icon, String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(color: color.withOpacity(0.9), fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImagePickerUI() {
+    return Column(
+      children: [
+        const Text(
+          'اختر طريقة التقاط الصورة:',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: _buildPickerButton(
+                Icons.camera_alt,
+                'التقاط صورة',
+                () => _pickImage(ImageSource.camera),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildPickerButton(
+                Icons.photo_library,
+                'اختيار من المعرض',
+                () => _pickImage(ImageSource.gallery),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPickerButton(IconData icon, String label, VoidCallback onPressed) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+    );
+  }
+
+  Widget _buildImagePreviewUI() {
+    final imageToDisplay = _analyzedImagePath != null ? File(_analyzedImagePath!) : _selectedImage!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _analyzedImagePath != null ? 'الصورة المحللة (مع كشف الملامح):' : 'الصورة المختارة:',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.file(imageToDisplay, height: 350, width: double.infinity, fit: BoxFit.contain),
+        ),
+        const SizedBox(height: 16),
+        if (_analysisResult == null)
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => setState(() => _selectedImage = null),
+                  icon: const Icon(Icons.delete),
+                  label: const Text('حذف'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton.icon(
+                  onPressed: _isAnalyzing ? null : _analyzeImage,
+                  icon: _isAnalyzing ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Icon(Icons.analytics),
+                  label: Text(_isAnalyzing ? 'جاري التحليل...' : 'بدء التحليل الذكي'),
+                  style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16), backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                ),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  Widget _buildResultUI() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.green.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8),
+              Text('نتائج التحليل الطبي الذكي', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const Divider(height: 32),
+          _buildScoreRow('احتمالية التأثر الصحي', '${_analysisResult!['addiction_probability_percentage']}%'),
+          _buildScoreRow('مستوى الخطورة', _analysisResult!['urgency_level']),
+          const SizedBox(height: 16),
+          const Text('التقرير المفصل:', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(_analysisResult!['overall_analysis'] ?? '', style: const TextStyle(height: 1.5)),
+          const SizedBox(height: 16),
+          const Text('المؤشرات المكتشفة:', style: TextStyle(fontWeight: FontWeight.bold)),
+          ...(_analysisResult!['indicators'] as Map<String, dynamic>).entries.map((e) => _buildIndicatorCard(e.key, e.value)),
+          const SizedBox(height: 24),
+          _buildInfoCard(Icons.warning_amber_rounded, _analysisResult!['disclaimer'] ?? '', Colors.orange),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: () => setState(() {
+              _selectedImage = null;
+              _analyzedImagePath = null;
+              _analysisResult = null;
+            }),
+            icon: const Icon(Icons.refresh),
+            label: const Text('تحليل صورة جديدة'),
+            style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScoreRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIndicatorCard(String type, dynamic data) {
+    return Card(
+      margin: const EdgeInsets.only(top: 8),
+      child: ListTile(
+        title: Text(_translateIndicator(type), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        subtitle: Text(data['description'] ?? ''),
+        trailing: data['severity'] != null ? Text('${data['severity']}%', style: const TextStyle(color: Colors.red)) : null,
+      ),
+    );
+  }
+
+  String _translateIndicator(String type) {
+    switch (type) {
+      case 'dark_circles': return 'الهالات السوداء';
+      case 'eye_redness': return 'احمرار العين';
+      case 'weight_loss_signs': return 'علامات نحافة الوجه';
+      case 'skin_condition': return 'حالة الجلد';
+      case 'mouth_teeth_condition': return 'حالة الفم والأسنان';
+      default: return type;
+    }
   }
 }

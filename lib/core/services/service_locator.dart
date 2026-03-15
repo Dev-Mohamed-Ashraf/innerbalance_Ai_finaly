@@ -7,6 +7,7 @@ import 'package:innerbalance/features/patient/data/repositories/patient_reposito
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:innerbalance/core/services/face_recognition_service.dart';
+import 'package:innerbalance/core/services/ai_engine_service.dart';
 import 'package:innerbalance/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:innerbalance/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:innerbalance/features/auth/domain/repositories/auth_repository.dart';
@@ -31,6 +32,7 @@ Future<void> init() async {
 
   // Core
   sl.registerLazySingleton<FaceRecognitionService>(() => FaceRecognitionServiceImpl());
+  sl.registerLazySingleton<AiEngineService>(() => AiEngineService());
 
   // Features - Auth
   _initAuth();

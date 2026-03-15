@@ -4,6 +4,8 @@ import 'package:innerbalance/core/services/service_locator.dart' as di;
 import 'package:innerbalance/core/theme/app_theme.dart';
 import 'package:innerbalance/core/services/zego_cloud_service.dart';
 import 'package:innerbalance/features/auth/presentation/pages/login_screen.dart';
+import 'package:innerbalance/features/ai_engine/presentation/pages/ai_engine_test_screen.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -68,7 +70,6 @@ class _InnerBalanceAppState extends State<InnerBalanceApp> {
       title: 'InnerBalance',
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightThemeMode,
       home: const LoginScreen(),
     );
   }
