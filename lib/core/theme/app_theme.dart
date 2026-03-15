@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:innerbalance/core/theme/app_palette.dart';
+import 'package:innerbalancee/core/theme/app_palette.dart';
 
 class AppTheme {
   static final lightThemeMode = ThemeData.light().copyWith(

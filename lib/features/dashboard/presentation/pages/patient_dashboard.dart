@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:innerbalance/features/patient/presentation/pages/find_doctors_page.dart';
-import 'package:innerbalance/features/patient/presentation/pages/my_doctors_page.dart';
-import 'package:innerbalance/features/patient/presentation/pages/patient_home_feed_page.dart';
-import 'package:innerbalance/features/patient/presentation/pages/patient_profile_page.dart';
+import 'package:innerbalancee/features/patient/presentation/pages/find_doctors_page.dart';
+import 'package:innerbalancee/features/patient/presentation/pages/my_doctors_page.dart';
+import 'package:innerbalancee/features/patient/presentation/pages/patient_home_feed_page.dart';
+import 'package:innerbalancee/features/patient/presentation/pages/patient_profile_page.dart';
 
 class PatientDashboard extends StatefulWidget {
   const PatientDashboard({super.key});

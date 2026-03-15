@@ -3,7 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:tflite_flutter/tflite_flutter.dart';
-import 'package:innerbalance/core/services/face_recognition/face_recognition_interface.dart';
+import 'package:innerbalancee/core/services/face_recognition/face_recognition_interface.dart';
 
 class FaceRecognitionServiceImpl implements FaceRecognitionService {
   Interpreter? _interpreter;

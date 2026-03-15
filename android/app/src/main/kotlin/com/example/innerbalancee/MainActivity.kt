@@ -1,4 +1,4 @@
-package com.example.innerbalance
+package com.example.innerbalancee
 
 import io.flutter.embedding.android.FlutterActivity
 

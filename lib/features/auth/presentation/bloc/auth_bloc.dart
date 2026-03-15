@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:innerbalance/core/usecases/usecase.dart';
-import 'package:innerbalance/features/auth/domain/usecases/login_anonymous.dart';
-import 'package:innerbalance/features/auth/domain/usecases/login_user.dart';
-import 'package:innerbalance/features/auth/domain/usecases/register_user.dart';
-import 'package:innerbalance/features/auth/presentation/bloc/auth_event.dart';
-import 'package:innerbalance/features/auth/presentation/bloc/auth_state.dart';
-import 'package:innerbalance/features/auth/domain/repositories/auth_repository.dart';
+import 'package:innerbalancee/core/usecases/usecase.dart';
+import 'package:innerbalancee/features/auth/domain/usecases/login_anonymous.dart';
+import 'package:innerbalancee/features/auth/domain/usecases/login_user.dart';
+import 'package:innerbalancee/features/auth/domain/usecases/register_user.dart';
+import 'package:innerbalancee/features/auth/presentation/bloc/auth_event.dart';
+import 'package:innerbalancee/features/auth/presentation/bloc/auth_state.dart';
+import 'package:innerbalancee/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUser _loginUser;

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:innerbalance/core/error/failures.dart';
-import 'package:innerbalance/core/usecases/usecase.dart';
-import 'package:innerbalance/features/auth/domain/entities/user.dart';
-import 'package:innerbalance/features/auth/domain/repositories/auth_repository.dart';
+import 'package:innerbalancee/core/error/failures.dart';
+import 'package:innerbalancee/core/usecases/usecase.dart';
+import 'package:innerbalancee/features/auth/domain/entities/user.dart';
+import 'package:innerbalancee/features/auth/domain/repositories/auth_repository.dart';
 
 class LoginAnonymous implements UseCase<UserEntity, NoParams> {
   final AuthRepository repository;

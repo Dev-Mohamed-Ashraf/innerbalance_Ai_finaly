@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:innerbalance/core/theme/app_palette.dart';
-import 'package:innerbalance/features/auth/presentation/pages/login_screen.dart';
+import 'package:innerbalancee/core/theme/app_palette.dart';
+import 'package:innerbalancee/features/auth/presentation/pages/login_screen.dart';
 
 class PendingApprovalScreen extends StatelessWidget {
   const PendingApprovalScreen({super.key});

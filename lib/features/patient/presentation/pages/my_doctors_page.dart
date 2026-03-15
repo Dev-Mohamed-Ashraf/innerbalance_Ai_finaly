@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:innerbalance/core/services/service_locator.dart';
-import 'package:innerbalance/core/theme/app_palette.dart';
-import 'package:innerbalance/features/chat/presentation/pages/chat_page.dart';
-import 'package:innerbalance/features/doctor/data/models/doctor_profile_model.dart';
-import 'package:innerbalance/features/patient/data/repositories/patient_repository_impl.dart';
+import 'package:innerbalancee/core/services/service_locator.dart';
+import 'package:innerbalancee/core/theme/app_palette.dart';
+import 'package:innerbalancee/features/chat/presentation/pages/chat_page.dart';
+import 'package:innerbalancee/features/doctor/data/models/doctor_profile_model.dart';
+import 'package:innerbalancee/features/patient/data/repositories/patient_repository_impl.dart';
 
 class MyDoctorsPage extends StatefulWidget {
   const MyDoctorsPage({super.key});

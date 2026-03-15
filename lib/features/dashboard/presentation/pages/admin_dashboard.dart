@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:innerbalance/core/services/service_locator.dart';
-import 'package:innerbalance/core/theme/app_palette.dart';
-import 'package:innerbalance/features/admin/presentation/bloc/admin_bloc.dart';
-import 'package:innerbalance/features/admin/presentation/bloc/admin_event.dart';
-import 'package:innerbalance/features/admin/presentation/bloc/admin_state.dart';
-import 'package:innerbalance/features/auth/presentation/pages/login_screen.dart';
+import 'package:innerbalancee/core/services/service_locator.dart';
+import 'package:innerbalancee/core/theme/app_palette.dart';
+import 'package:innerbalancee/features/admin/presentation/bloc/admin_bloc.dart';
+import 'package:innerbalancee/features/admin/presentation/bloc/admin_event.dart';
+import 'package:innerbalancee/features/admin/presentation/bloc/admin_state.dart';
+import 'package:innerbalancee/features/auth/presentation/pages/login_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});

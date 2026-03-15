@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:innerbalance/core/error/failures.dart';
-import 'package:innerbalance/core/usecases/usecase.dart';
-import 'package:innerbalance/features/auth/domain/entities/user.dart';
-import 'package:innerbalance/features/auth/domain/repositories/auth_repository.dart';
+import 'package:innerbalancee/core/error/failures.dart';
+import 'package:innerbalancee/core/usecases/usecase.dart';
+import 'package:innerbalancee/features/auth/domain/entities/user.dart';
+import 'package:innerbalancee/features/auth/domain/repositories/auth_repository.dart';
 
 class RegisterUser implements UseCase<UserEntity, RegisterUserParams> {
   final AuthRepository repository;

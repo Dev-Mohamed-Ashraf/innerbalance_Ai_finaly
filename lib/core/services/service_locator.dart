@@ -1,25 +1,25 @@
 import 'package:get_it/get_it.dart';
-import 'package:innerbalance/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:innerbalance/features/doctor/data/datasources/doctor_remote_data_source.dart';
-import 'package:innerbalance/features/doctor/data/repositories/doctor_repository_impl.dart';
-import 'package:innerbalance/features/patient/data/datasources/patient_remote_data_source.dart';
-import 'package:innerbalance/features/patient/data/repositories/patient_repository_impl.dart';
+import 'package:innerbalancee/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:innerbalancee/features/doctor/data/datasources/doctor_remote_data_source.dart';
+import 'package:innerbalancee/features/doctor/data/repositories/doctor_repository_impl.dart';
+import 'package:innerbalancee/features/patient/data/datasources/patient_remote_data_source.dart';
+import 'package:innerbalancee/features/patient/data/repositories/patient_repository_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:innerbalance/core/services/face_recognition_service.dart';
-import 'package:innerbalance/core/services/ai_engine_service.dart';
-import 'package:innerbalance/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:innerbalance/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:innerbalance/features/auth/domain/repositories/auth_repository.dart';
-import 'package:innerbalance/features/auth/domain/usecases/login_anonymous.dart';
-import 'package:innerbalance/features/auth/domain/usecases/login_user.dart';
-import 'package:innerbalance/features/auth/domain/usecases/register_user.dart';
-import 'package:innerbalance/features/admin/data/datasources/admin_remote_data_source.dart';
-import 'package:innerbalance/features/admin/data/repositories/admin_repository_impl.dart';
-import 'package:innerbalance/features/admin/domain/repositories/admin_repository.dart';
-import 'package:innerbalance/features/admin/domain/usecases/approve_doctor.dart';
-import 'package:innerbalance/features/admin/domain/usecases/get_pending_doctors.dart';
-import 'package:innerbalance/features/admin/presentation/bloc/admin_bloc.dart';
+import 'package:innerbalancee/core/services/face_recognition_service.dart';
+import 'package:innerbalancee/core/services/ai_engine_service.dart';
+import 'package:innerbalancee/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:innerbalancee/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:innerbalancee/features/auth/domain/repositories/auth_repository.dart';
+import 'package:innerbalancee/features/auth/domain/usecases/login_anonymous.dart';
+import 'package:innerbalancee/features/auth/domain/usecases/login_user.dart';
+import 'package:innerbalancee/features/auth/domain/usecases/register_user.dart';
+import 'package:innerbalancee/features/admin/data/datasources/admin_remote_data_source.dart';
+import 'package:innerbalancee/features/admin/data/repositories/admin_repository_impl.dart';
+import 'package:innerbalancee/features/admin/domain/repositories/admin_repository.dart';
+import 'package:innerbalancee/features/admin/domain/usecases/approve_doctor.dart';
+import 'package:innerbalancee/features/admin/domain/usecases/get_pending_doctors.dart';
+import 'package:innerbalancee/features/admin/presentation/bloc/admin_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {

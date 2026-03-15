@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:innerbalance/core/error/failures.dart';
-import 'package:innerbalance/features/doctor/data/models/article_model.dart';
-import 'package:innerbalance/features/doctor/data/models/doctor_profile_model.dart';
-import 'package:innerbalance/features/patient/data/datasources/patient_remote_data_source.dart';
+import 'package:innerbalancee/core/error/failures.dart';
+import 'package:innerbalancee/features/doctor/data/models/article_model.dart';
+import 'package:innerbalancee/features/doctor/data/models/doctor_profile_model.dart';
+import 'package:innerbalancee/features/patient/data/datasources/patient_remote_data_source.dart';
 
 abstract class PatientRepository {
   Future<Either<Failure, List<ArticleModel>>> getFeedArticles();

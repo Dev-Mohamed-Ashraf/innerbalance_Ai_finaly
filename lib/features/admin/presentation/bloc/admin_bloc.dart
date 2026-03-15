@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:innerbalance/core/usecases/usecase.dart';
-import 'package:innerbalance/features/admin/domain/usecases/approve_doctor.dart';
-import 'package:innerbalance/features/admin/domain/usecases/get_pending_doctors.dart';
-import 'package:innerbalance/features/admin/presentation/bloc/admin_event.dart';
-import 'package:innerbalance/features/admin/presentation/bloc/admin_state.dart';
+import 'package:innerbalancee/core/usecases/usecase.dart';
+import 'package:innerbalancee/features/admin/domain/usecases/approve_doctor.dart';
+import 'package:innerbalancee/features/admin/domain/usecases/get_pending_doctors.dart';
+import 'package:innerbalancee/features/admin/presentation/bloc/admin_event.dart';
+import 'package:innerbalancee/features/admin/presentation/bloc/admin_state.dart';
 
 class AdminBloc extends Bloc<AdminEvent, AdminState> {
   final GetPendingDoctors _getPendingDoctors;

@@ -1,4 +1,4 @@
-# innerbalance
+# innerbalancee
 
 A new Flutter project.
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:innerbalance/core/services/service_locator.dart';
-import 'package:innerbalance/core/theme/app_palette.dart';
-import 'package:innerbalance/features/doctor/data/models/article_model.dart';
-import 'package:innerbalance/features/doctor/data/repositories/doctor_repository_impl.dart';
+import 'package:innerbalancee/core/services/service_locator.dart';
+import 'package:innerbalancee/core/theme/app_palette.dart';
+import 'package:innerbalancee/features/doctor/data/models/article_model.dart';
+import 'package:innerbalancee/features/doctor/data/repositories/doctor_repository_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -17,6 +17,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
+  final _imageUrlController = TextEditingController();
   bool _isLoading = false;
 
   Future<void> _publishArticle() async {
@@ -33,6 +34,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
       title: _titleController.text,
       content: _contentController.text,
       createdAt: DateTime.now(),
+      imageUrl: _imageUrlController.text.trim().isEmpty ? null : _imageUrlController.text.trim(),
     );
 
     final repository = sl<DoctorRepository>();
@@ -63,6 +65,7 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
   void dispose() {
     _titleController.dispose();
     _contentController.dispose();
+    _imageUrlController.dispose();
     super.dispose();
   }
 
@@ -85,6 +88,14 @@ class _CreateArticlePageState extends State<CreateArticlePage> {
                 ),
                 validator: (value) =>
                     value!.isEmpty ? 'Please enter a title' : null,
+              ),
+              TextFormField(
+                controller: _imageUrlController,
+                decoration: const InputDecoration(
+                  labelText: 'Image URL (Optional)',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.image_outlined),
+                ),
               ),
               const SizedBox(height: 16),
               Expanded(

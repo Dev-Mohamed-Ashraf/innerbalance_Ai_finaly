@@ -1,4 +1,4 @@
-import 'package:innerbalance/features/auth/domain/entities/user.dart';
+import 'package:innerbalancee/features/auth/domain/entities/user.dart';
 
 class UserModel extends UserEntity {
   const UserModel({

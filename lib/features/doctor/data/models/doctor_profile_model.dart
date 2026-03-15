@@ -18,21 +18,39 @@ class DoctorProfileModel {
   });
 
   factory DoctorProfileModel.fromJson(Map<String, dynamic> json) {
-    String extractedName = '';
+    // Handle both cases: 
+    // 1. Data comes from doctor_profiles table (profiles is nested)
+    // 2. Data comes from profiles table (doctor_profiles is nested)
+    
+    String extractedName = json['name'] ?? '';
+    Map<String, dynamic>? drProfile;
+
     if (json['profiles'] != null && json['profiles'] is Map) {
+      // Case 1: Query started from doctor_profiles
       extractedName = json['profiles']['name'] ?? '';
-    } else if (json['name'] != null) {
-      extractedName = json['name'];
+      drProfile = json;
+    } else if (json['doctor_profiles'] != null) {
+      // Case 2: Query started from profiles
+      // doctor_profiles might be a list or a single object depending on Supabase version/query
+      final dynamic nested = json['doctor_profiles'];
+      if (nested is List && nested.isNotEmpty) {
+        drProfile = nested[0];
+      } else if (nested is Map<String, dynamic>) {
+        drProfile = nested;
+      }
+    } else {
+      // Direct query or fallback
+      drProfile = json;
     }
 
     return DoctorProfileModel(
-      id: json['id'],
+      id: json['id'] ?? drProfile?['id'] ?? '',
       name: extractedName,
-      specialization: json['specialization'] ?? '',
-      price: (json['price'] ?? 0).toDouble(),
-      bio: json['bio'] ?? '',
-      avatarUrl: json['avatar_url'] ?? '',
-      availableHours: json['available_hours'] ?? {},
+      specialization: drProfile?['specialization'] ?? 'General',
+      price: (drProfile?['price'] ?? 0).toDouble(),
+      bio: drProfile?['bio'] ?? '',
+      avatarUrl: drProfile?['avatar_url'] ?? '',
+      availableHours: drProfile?['available_hours'] ?? {},
     );
   }
 

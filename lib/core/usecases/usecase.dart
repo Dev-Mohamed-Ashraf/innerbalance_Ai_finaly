@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:innerbalance/core/error/failures.dart';
+import 'package:innerbalancee/core/error/failures.dart';
 
 abstract class UseCase<Type, Params> {
   Future<Either<Failure, Type>> call(Params params);

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:innerbalance/core/error/failures.dart';
-import 'package:innerbalance/core/usecases/usecase.dart';
-import 'package:innerbalance/features/admin/domain/repositories/admin_repository.dart';
-import 'package:innerbalance/features/auth/domain/entities/user.dart';
+import 'package:innerbalancee/core/error/failures.dart';
+import 'package:innerbalancee/core/usecases/usecase.dart';
+import 'package:innerbalancee/features/admin/domain/repositories/admin_repository.dart';
+import 'package:innerbalancee/features/auth/domain/entities/user.dart';
 
 class GetPendingDoctors implements UseCase<List<UserEntity>, NoParams> {
   final AdminRepository repository;

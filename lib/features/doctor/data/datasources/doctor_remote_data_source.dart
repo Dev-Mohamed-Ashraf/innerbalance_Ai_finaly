@@ -1,6 +1,6 @@
-import 'package:innerbalance/core/error/exceptions.dart';
-import 'package:innerbalance/features/doctor/data/models/article_model.dart';
-import 'package:innerbalance/features/doctor/data/models/doctor_profile_model.dart';
+import 'package:innerbalancee/core/error/exceptions.dart';
+import 'package:innerbalancee/features/doctor/data/models/article_model.dart';
+import 'package:innerbalancee/features/doctor/data/models/doctor_profile_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class DoctorRemoteDataSource {

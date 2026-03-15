@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:innerbalance/core/error/failures.dart';
-import 'package:innerbalance/features/doctor/data/datasources/doctor_remote_data_source.dart';
-import 'package:innerbalance/features/doctor/data/models/article_model.dart';
-import 'package:innerbalance/features/doctor/data/models/doctor_profile_model.dart';
+import 'package:innerbalancee/core/error/failures.dart';
+import 'package:innerbalancee/features/doctor/data/datasources/doctor_remote_data_source.dart';
+import 'package:innerbalancee/features/doctor/data/models/article_model.dart';
+import 'package:innerbalancee/features/doctor/data/models/doctor_profile_model.dart';
 
 abstract class DoctorRepository {
   Future<Either<Failure, DoctorProfileModel?>> getDoctorProfile(String userId);

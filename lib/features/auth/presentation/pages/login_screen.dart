@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:innerbalance/core/services/service_locator.dart';
-import 'package:innerbalance/core/theme/app_palette.dart';
-import 'package:innerbalance/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:innerbalance/features/auth/presentation/bloc/auth_event.dart';
-import 'package:innerbalance/features/auth/presentation/bloc/auth_state.dart';
-import 'package:innerbalance/features/auth/presentation/pages/register_screen.dart';
-import 'package:innerbalance/features/auth/presentation/pages/pending_approval_screen.dart';
-import 'package:innerbalance/features/dashboard/presentation/pages/admin_dashboard.dart';
-import 'package:innerbalance/features/dashboard/presentation/pages/doctor_dashboard.dart';
-import 'package:innerbalance/features/dashboard/presentation/pages/patient_dashboard.dart';
+import 'package:innerbalancee/core/services/service_locator.dart';
+import 'package:innerbalancee/core/theme/app_palette.dart';
+import 'package:innerbalancee/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:innerbalancee/features/auth/presentation/bloc/auth_event.dart';
+import 'package:innerbalancee/features/auth/presentation/bloc/auth_state.dart';
+import 'package:innerbalancee/features/auth/presentation/pages/register_screen.dart';
+import 'package:innerbalancee/features/auth/presentation/pages/pending_approval_screen.dart';
+import 'package:innerbalancee/features/dashboard/presentation/pages/admin_dashboard.dart';
+import 'package:innerbalancee/features/dashboard/presentation/pages/doctor_dashboard.dart';
+import 'package:innerbalancee/features/dashboard/presentation/pages/patient_dashboard.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 

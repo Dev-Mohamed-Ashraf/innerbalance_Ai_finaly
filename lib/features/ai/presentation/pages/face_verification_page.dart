@@ -1,8 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:innerbalance/core/services/face_recognition_service.dart';
-import 'package:innerbalance/core/services/service_locator.dart';
-import 'package:innerbalance/core/theme/app_palette.dart';
+import 'package:innerbalancee/core/services/face_recognition_service.dart';
+import 'package:innerbalancee/core/services/service_locator.dart';
+import 'package:innerbalancee/core/theme/app_palette.dart';
 import 'package:image/image.dart' as img;
 
 class FaceVerificationPage extends StatefulWidget {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:innerbalance/core/services/service_locator.dart' as di;
-import 'package:innerbalance/core/theme/app_theme.dart';
-import 'package:innerbalance/core/services/zego_cloud_service.dart';
-import 'package:innerbalance/features/auth/presentation/pages/login_screen.dart';
-import 'package:innerbalance/features/ai_engine/presentation/pages/ai_engine_test_screen.dart';
+import 'package:innerbalancee/core/services/service_locator.dart' as di;
+import 'package:innerbalancee/core/theme/app_theme.dart';
+import 'package:innerbalancee/core/services/zego_cloud_service.dart';
+import 'package:innerbalancee/features/auth/presentation/pages/login_screen.dart';
+import 'package:innerbalancee/features/ai_engine/presentation/pages/ai_engine_test_screen.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 

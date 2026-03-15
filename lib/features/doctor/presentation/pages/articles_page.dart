@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:innerbalance/core/services/service_locator.dart';
-import 'package:innerbalance/features/doctor/data/models/article_model.dart';
-import 'package:innerbalance/features/doctor/data/repositories/doctor_repository_impl.dart';
-import 'package:innerbalance/features/doctor/presentation/pages/create_article_page.dart';
+import 'package:innerbalancee/core/services/service_locator.dart';
+import 'package:innerbalancee/features/doctor/data/models/article_model.dart';
+import 'package:innerbalancee/features/doctor/data/repositories/doctor_repository_impl.dart';
+import 'package:innerbalancee/features/doctor/presentation/pages/create_article_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ArticlesPage extends StatefulWidget {

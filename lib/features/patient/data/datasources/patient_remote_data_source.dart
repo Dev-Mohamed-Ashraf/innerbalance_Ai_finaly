@@ -1,6 +1,6 @@
-import 'package:innerbalance/core/error/exceptions.dart';
-import 'package:innerbalance/features/doctor/data/models/article_model.dart';
-import 'package:innerbalance/features/doctor/data/models/doctor_profile_model.dart';
+import 'package:innerbalancee/core/error/exceptions.dart';
+import 'package:innerbalancee/features/doctor/data/models/article_model.dart';
+import 'package:innerbalancee/features/doctor/data/models/doctor_profile_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class PatientRemoteDataSource {
@@ -21,7 +21,7 @@ class PatientRemoteDataSourceImpl implements PatientRemoteDataSource {
     try {
       final response = await supabaseClient
           .from('articles')
-          .select()
+          .select('*, profiles!doctor_id(name), doctor_profiles!doctor_id(avatar_url)')
           .order('created_at', ascending: false);
 
       return (response as List).map((e) => ArticleModel.fromJson(e)).toList();
@@ -33,13 +33,12 @@ class PatientRemoteDataSourceImpl implements PatientRemoteDataSource {
   @override
   Future<List<DoctorProfileModel>> getAllDoctors() async {
     try {
-      // Fetch doctor_profiles and join with profiles to get the name
-      // Filter by role='doctor' and is_approved=true in the profiles table
+      // Query from profiles table instead of doctor_profiles to ensure all doctors are found
+      // even if they don't have a specialized profile record yet.
       final response = await supabaseClient
-          .from('doctor_profiles')
-          .select('*, profiles!inner(name, role, is_approved)')
-          .eq('profiles.role', 'doctor')
-          .eq('profiles.is_approved', true);
+          .from('profiles')
+          .select('*, doctor_profiles(*)')
+          .eq('role', 'doctor');
 
       return (response as List).map((e) => DoctorProfileModel.fromJson(e)).toList();
     } catch (e) {
@@ -94,10 +93,10 @@ class PatientRemoteDataSourceImpl implements PatientRemoteDataSource {
 
       if (doctorIds.isEmpty) return [];
 
-      // 2. Get doctor details
+      // 2. Get doctor details starting from profiles table
       final response = await supabaseClient
-          .from('doctor_profiles')
-          .select('*, profiles!inner(name)')
+          .from('profiles')
+          .select('*, doctor_profiles(*)')
           .inFilter('id', doctorIds);
 
       return (response as List).map((e) => DoctorProfileModel.fromJson(e)).toList();

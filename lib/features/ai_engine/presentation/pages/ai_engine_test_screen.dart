@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:innerbalance/core/services/ai_engine_service.dart';
-import 'package:innerbalance/core/services/service_locator.dart';
+import 'package:innerbalancee/core/services/ai_engine_service.dart';
+import 'package:innerbalancee/core/services/service_locator.dart';
 
 class AiEngineTestScreen extends StatefulWidget {
   const AiEngineTestScreen({super.key});

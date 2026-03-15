@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:innerbalance/core/services/zego_cloud_service.dart';
-import 'package:innerbalance/core/theme/app_palette.dart';
-import 'package:innerbalance/features/call/presentation/pages/call_page.dart';
+import 'package:innerbalancee/core/services/zego_cloud_service.dart';
+import 'package:innerbalancee/core/theme/app_palette.dart';
+import 'package:innerbalancee/features/call/presentation/pages/call_page.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;

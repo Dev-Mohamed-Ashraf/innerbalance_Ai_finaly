@@ -1,5 +1,5 @@
-import 'package:innerbalance/core/error/failures.dart';
-import 'package:innerbalance/features/auth/data/models/user_model.dart';
+import 'package:innerbalancee/core/error/failures.dart';
+import 'package:innerbalancee/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class AdminRemoteDataSource {

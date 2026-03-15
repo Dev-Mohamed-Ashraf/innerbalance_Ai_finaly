@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:innerbalance/core/error/failures.dart';
-import 'package:innerbalance/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:innerbalance/features/auth/domain/entities/user.dart';
-import 'package:innerbalance/features/auth/domain/repositories/auth_repository.dart';
+import 'package:innerbalancee/core/error/failures.dart';
+import 'package:innerbalancee/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:innerbalancee/features/auth/domain/entities/user.dart';
+import 'package:innerbalancee/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
